@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>IAPRENDER App — IA na Escola</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-soft: rgba(79, 70, 229, 0.12);
+      --accent: #0d9488;
+      --accent-soft: rgba(13, 148, 136, 0.12);
+      --amber: #d97706;
+      --amber-soft: rgba(217, 119, 6, 0.12);
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+      --radius: 18px;
+      --sidebar-w: 250px;
+      --bottom-nav-h: 68px;
+    }
+
+    body.dark {
+      --bg: #0b1120;
+      --surface: #111827;
+      --surface-2: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #1e293b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* Sidebar Desktop */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 16px;
+      flex-shrink: 0;
+      z-index: 20;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .app-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 1.15rem;
+      box-shadow: 0 6px 14px rgba(79, 70, 229, 0.3);
+    }
+
+    .app-brand-text strong {
+      display: block;
+      font-size: 1.15rem;
+      letter-spacing: -0.4px;
+    }
+
+    .app-brand-text span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 13px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--primary);
+    }
+
+    /* Main Content Area */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: 64px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-status {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .mobile-theme-btn {
+      display: none;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .screen-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      padding-bottom: 40px;
+    }
+
+    .screen {
+      display: none;
+      max-width: 980px;
+      margin: 0 auto;
+      animation: fadeScreen 0.25s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeScreen {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Banner App Home */
+    .app-hero {
+      background: linear-gradient(135deg, var(--primary), #312e81);
+      color: #fff;
+      border-radius: 22px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.25);
+    }
+
+    .app-hero h2 {
+      font-size: 1.65rem;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+
+    .app-hero p {
+      color: #e0e7ff;
+      font-size: 0.98rem;
+      max-width: 620px;
+      margin-bottom: 20px;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--primary);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-white:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .b-prof { background: var(--primary-soft); color: var(--primary); }
+    .b-est { background: var(--accent-soft); color: var(--accent); }
+    .b-coord { background: var(--amber-soft); color: var(--amber); }
+
+    .app-card h3 {
+      font-size: 1.12rem;
+      margin-bottom: 8px;
+    }
+
+    .app-card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .card-action {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .card-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Filter Chips */
+    .chips {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .chip {
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .chip.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* Gerador de Prompts */
+    .panel-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    select:focus, input[type="text"]:focus {
+      outline: 2px solid var(--primary);
+    }
+
+    .prompt-result {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 14px;
+      padding: 18px;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      margin: 16px 0;
+      white-space: pre-wrap;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+    }
+
+    /* Chat Simulador */
+    .chat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      height: 62dvh;
+      min-height: 380px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.93rem;
+      line-height: 1.5;
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-suggestions {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      overflow-x: auto;
+      border-top: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+
+    .sug-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.2s ease;
+    }
+
+    .sug-btn:hover {
+      border-color: var(--primary);
+    }
+
+    .chat-input-bar {
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    /* Bottom Navigation Mobile */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-h);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      justify-content: space-around;
+      align-items: center;
+      z-index: 30;
+    }
+
+    .b-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 6px 10px;
+    }
+
+    .b-nav-item.active {
+      color: var(--primary);
+    }
+
+    .b-nav-item span:first-child {
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 780px) {
+      .sidebar {
+        display: none;
+      }
+      .bottom-nav {
+        display: flex;
+      }
+      .mobile-theme-btn {
+        display: grid;
+        place-items: center;
+      }
+      .screen-container {
+        padding: 16px;
+        padding-bottom: calc(var(--bottom-nav-h) + 24px);
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Lateral (Desktop) -->
+  <aside class="sidebar">
+    <div>
+      <div class="app-brand">
+        <div class="app-logo">IA</div>
+        <div class="app-brand-text">
+          <strong>IAPRENDER</strong>
+          <span>App Educacional</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item active" data-screen="inicio">
+          <span class="nav-icon">🏠</span> Início
+        </button>
+        <button class="nav-item" data-screen="guias">
+          <span class="nav-icon">📚</span> Guias por Perfil
+        </button>
+        <button class="nav-item" data-screen="gerador">
+          <span class="nav-icon">✨</span> Gerador de Prompts
+        </button>
+        <button class="nav-item" data-screen="assistente">
+          <span class="nav-icon">💬</span> Simulador IAPRENDER
+        </button>
+        <button class="nav-item" data-screen="etica">
+          <span class="nav-icon">🛡️</span> Boas Práticas
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="theme-btn" id="themeToggleDesktop">🌓 Alternar Tema</button>
+    </div>
+  </aside>
+
+  <!-- Área Principal do App -->
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title" id="topbarTitle">Início — IAPRENDER</div>
+      <div class="topbar-actions">
+        <span class="pill-status">● Modo Escola Ativo</span>
+        <button class="mobile-theme-btn" id="themeToggleMobile" aria-label="Alternar tema">🌓</button>
+      </div>
+    </header>
+
+    <main class="screen-container">
+      
+      <!-- TELA 1: INÍCIO -->
+      <section class="screen active" id="screen-inicio">
+        <div class="app-hero">
+          <h2>Bem-vindo ao App IAPRENDER 🚀</h2>
+          <p>
+            Descubra na prática como <strong>professores</strong>, <strong>estudantes</strong> e <strong>coordenadores pedagógicos</strong> podem usar a Inteligência Artificial dentro da escola de forma criativa, segura e ética.
+          </p>
+          <div class="quick-actions">
+            <button class="btn-white" onclick="goToScreen('guias')">Explorar Guias na Escola</button>
+            <button class="btn-glass" onclick="goToScreen('assistente')">Conversar com a IA</button>
+          </div>
+        </div>
+
+        <div class="cards-grid">
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-prof">👩‍🏫 Professores</span>
+              <h3>Planejamento e Inclusão</h3>
+              <p>Crie sequências didáticas alinhadas à BNCC, adapte textos para inclusão escolar e elabore rubricas de avaliação em segundos.</p>
+            </div>
+            <button class="card-action" onclick="openProfileGuide('professor')">Abrir Guia do Professor →</button>
+          </div>
+
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-est">🎓 Estudantes</span>
+              <h3>Estudo Ativo e Tutoria</h3>
+              <p>Use a IA como tutora socrática para entender matérias difíceis passo a passo, gerar quizzes de revisão e organizar horários.</p>
+            </div>
+            <button class="card-action" onclick="openProfileGuide('estudante')">Abrir Guia do Estudante →</button>
+          </div>
+
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-coord">📊 Coordenadores</span>
+              <h3>Gestão e Formação</h3>
+              <p>Estruture oficinas docentes, conecte disciplinas em projetos interdisciplinares e redija comunicados claros às famílias.</p>
+            </div>
+            <button class="card-action" onclick="openProfileGuide('coordenador')">Abrir Guia do Coordenador →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 2: GUIAS POR PERFIL -->
+      <section class="screen" id="screen-guias">
+        <div class="chips" id="profileChips">
+          <button class="chip active" data-filter="todos">Todos os Perfis</button>
+          <button class="chip" data-filter="professor">👩‍🏫 Professores</button>
+          <button class="chip" data-filter="estudante">🎓 Estudantes</button>
+          <button class="chip" data-filter="coordenador">📊 Coordenadores</button>
+        </div>
+
+        <div class="cards-grid" id="guidesGrid"></div>
+      </section>
+
+      <!-- TELA 3: GERADOR DE PROMPTS -->
+      <section class="screen" id="screen-gerador">
+        <div class="panel-box">
+          <h3 style="margin-bottom: 16px;">✨ Construtor de Comandos Escolares</h3>
+          <div class="form-row">
+            <div>
+              <label for="genRole">Seu perfil na escola</label>
+              <select id="genRole">
+                <option value="professor">Professor(a)</option>
+                <option value="estudante">Estudante</option>
+                <option value="coordenador">Coordenador(a)</option>
+              </select>
+            </div>
+            <div>
+              <label for="genGoal">Objetivo pedagógico</label>
+              <select id="genGoal"></select>
+            </div>
+          </div>
+
+          <div>
+            <label for="genTopic">Assunto, disciplina ou série</label>
+            <input type="text" id="genTopic" value="Fotossíntese e Cadeia Alimentar — 7º ano" />
+          </div>
+
+          <div class="prompt-result" id="genOutput"></div>
+
+          <div class="btn-row">
+            <button class="btn-primary" id="copyPromptBtn">📋 Copiar Comando</button>
+            <button class="btn-outline" id="saveFavBtn">⭐ Salvar nos Favoritos</button>
+          </div>
+          <p id="genFeedback" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent); font-weight: 700;"></p>
+        </div>
+
+        <div class="panel-box">
+          <h3 style="margin-bottom: 12px;">⭐ Seus Comandos Salvos</h3>
+          <div id="favList" style="display: grid; gap: 10px; font-size: 0.9rem; color: var(--muted);">
+            Nenhum comando salvo ainda. Clique em "Salvar nos Favoritos" acima.
+          </div>
+        </div>
+      </section>
+
+      <!-- TELA 4: SIMULADOR DE CHAT IAPRENDER -->
+      <section class="screen" id="screen-assistente">
+        <div class="chat-box">
+          <div class="chat-messages" id="chatMessages">
+            <div class="msg bot">
+              Olá! Eu sou a <strong>IAPRENDER</strong> 👋<br><br>
+              Estou aqui para ajudar professores, estudantes e coordenadores a descobrirem como usar a Inteligência Artificial na escola. Escolha uma pergunta rápida abaixo ou digite sua dúvida!
+            </div>
+          </div>
+
+          <div class="chat-suggestions">
+            <button class="sug-btn" onclick="sendQuickMsg('Como um professor pode usar IA na aula?')">👩‍🏫 Uso para Professores</button>
+            <button class="sug-btn" onclick="sendQuickMsg('Como estudar com IA sem colar?')">🎓 Uso para Estudantes</button>
+            <button class="sug-btn" onclick="sendQuickMsg('Como a coordenação pode usar IA?')">📊 Uso para Coordenadores</button>
+            <button class="sug-btn" onclick="sendQuickMsg('Quais cuidados éticos ter na escola?')">🛡️ Ética e LGPD</button>
+          </div>
+
+          <form class="chat-input-bar" id="chatForm">
+            <input type="text" id="chatInput" placeholder="Pergunte algo sobre IA na escola..." autocomplete="off" />
+            <button type="submit" class="btn-primary">Enviar</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TELA 5: BOAS PRÁTICAS -->
+      <section class="screen" id="screen-etica">
+        <div class="cards-grid">
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-prof">Regra 01</span>
+              <h3>🧠 Pensamento Crítico</h3>
+              <p>A IA pode gerar informações incorretas. Professores e estudantes devem sempre verificar fatos em livros didáticos e fontes confiáveis.</p>
+            </div>
+          </div>
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-est">Regra 02</span>
+              <h3>🔒 Proteção de Dados (LGPD)</h3>
+              <p>Nunca insira nomes completos, notas, diagnósticos ou documentos pessoais de alunos em ferramentas públicas de IA.</p>
+            </div>
+          </div>
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-coord">Regra 03</span>
+              <h3>✍️ Autoria e Aprendizado</h3>
+              <p>Copiar e colar não desenvolve habilidades. Use a IA para debater ideias, revisar textos e esclarecer dúvidas.</p>
+            </div>
+          </div>
+          <div class="app-card">
+            <div>
+              <span class="card-badge b-prof">Regra 04</span>
+              <h3>🤝 Protagonismo Humano</h3>
+              <p>A tecnologia apoia o trabalho pedagógico, mas o vínculo, a escuta e a mediação do professor são insubstituíveis.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Barra de Navegação Inferior (Mobile) -->
+  <nav class="bottom-nav">
+    <button class="b-nav-item active" data-screen="inicio">
+      <span>🏠</span><span>Início</span>
+    </button>
+    <button class="b-nav-item" data-screen="guias">
+      <span>📚</span><span>Guias</span>
+    </button>
+    <button class="b-nav-item" data-screen="gerador">
+      <span>✨</span><span>Prompts</span>
+    </button>
+    <button class="b-nav-item" data-screen="assistente">
+      <span>💬</span><span>Chat IA</span>
+    </button>
+    <button class="b-nav-item" data-screen="etica">
+      <span>🛡️</span><span>Ética</span>
+    </button>
+  </nav>
+
+  <script>
+    // Navegação entre telas (estilo SPA / App)
+    const screenTitles = {
+      inicio: "Início — IAPRENDER",
+      guias: "Guias Práticos na Escola",
+      gerador: "Gerador de Prompts",
+      assistente: "Simulador IAPRENDER",
+      etica: "Uso Ético e Responsável"
+    };
+
+    function goToScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item, .b-nav-item').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.screen === screenId);
+      });
+
+      const target = document.getElementById('screen-' + screenId);
+      if (target) target.classList.add('active');
+      document.getElementById('topbarTitle').textContent = screenTitles[screenId] || "IAPRENDER";
+    }
+
+    document.querySelectorAll('.nav-item, .b-nav-item').forEach(btn => {
+      btn.addEventListener('click', () => goToScreen(btn.dataset.screen));
+    });
+
+    // Modo Claro / Escuro
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      try {
+        localStorage.setItem('iaprender_theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      } catch (e) {}
+    }
+    try {
+      if (localStorage.getItem('iaprender_theme') === 'dark') {
+        document.body.classList.add('dark');
+      }
+    } catch (e) {}
+    document.getElementById('themeToggleDesktop').addEventListener('click', toggleTheme);
+    document.getElementById('themeToggleMobile').addEventListener('click', toggleTheme);
+
+    // Dados dos Guias por Perfil
+    const guidesData = [
+      { role: "professor", badge: "b-prof", label: "👩‍🏫 Professor", title: "Planos de Aula Ativos", desc: "Gere sequências didáticas alinhadas à BNCC com dinâmicas em grupo e perguntas norteadoras." },
+      { role: "professor", badge: "b-prof", label: "👩‍🏫 Professor", title: "Adaptação Inclusiva", desc: "Reescreva atividades em linguagem mais objetiva e visual para apoiar alunos com TDAH, dislexia ou TEA." },
+      { role: "professor", badge: "b-prof", label: "👩‍🏫 Professor", title: "Rubricas de Avaliação", desc: "Crie critérios transparentes de avaliação para apresentações orais, feiras de ciências e redações." },
+      { role: "estudante", badge: "b-est", label: "🎓 Estudante", title: "Tutor Socrático 24h", desc: "Peça explicações com analogias simples e perguntas passo a passo, sem receber a resposta pronta." },
+      { role: "estudante", badge: "b-est", label: "🎓 Estudante", title: "Quizzes de Revisão", desc: "Transforme resumos do caderno em simulados interativos para testar o que você realmente aprendeu." },
+      { role: "estudante", badge: "b-est", label: "🎓 Estudante", title: "Cronograma Semanal", desc: "Organize horários equilibrados entre estudo, exercícios e pausas de descanso." },
+      { role: "coordenador", badge: "b-coord", label: "📊 Coordenador", title: "Formação Continuada", desc: "Estruture oficinas práticas de 50 minutos para ensinar os docentes a usarem IA com segurança." },
+      { role: "coordenador", badge: "b-coord", label: "📊 Coordenador", title: "Projetos Interdisciplinares", desc: "Integre diferentes áreas do conhecimento em projetos temáticos envolvendo toda a escola." },
+      { role: "coordenador", badge: "b-coord", label: "📊 Coordenador", title: "Comunicação com Famílias", desc: "Redija circulares, convites de reuniões e boletins pedagógicos claros e acolhedores." }
+    ];
+
+    function renderGuides(filter = 'todos') {
+      const grid = document.getElementById('guidesGrid');
+      grid.innerHTML = '';
+      const filtered = filter === 'todos' ? guidesData : guidesData.filter(g => g.role === filter);
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = `
+          <div>
+            <span class="card-badge ${item.badge}">${item.label}</span>
+            <h3>${item.title}</h3>
+            <p>${item.desc}</p>
+          </div>
+          <button class="card-action" onclick="useInGenerator('${item.role}', '${item.title}')">Criar Prompt disso →</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll('#profileChips .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#profileChips .chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderGuides(chip.dataset.filter);
+      });
+    });
+
+    function openProfileGuide(role) {
+      goToScreen('guias');
+      document.querySelectorAll('#profileChips .chip').forEach(c => {
+        c.classList.toggle('active', c.dataset.filter === role);
+      });
+      renderGuides(role);
+    }
+
+    function useInGenerator(role, title) {
+      goToScreen('gerador');
+      document.getElementById('genRole').value = role;
+      loadGeneratorGoals();
+      document.getElementById('genTopic').value = title;
+      updatePromptOutput();
+    }
+
+    renderGuides();
+
+    // Gerador de Prompts + Favoritos
+    const promptTemplates = {
+      professor: [
+        { name: "Plano de aula ativo (BNCC)", text: t => `Atue como especialista em didática e BNCC. Crie um plano de aula de 50 minutos sobre "${t}" com: 1) Objetivo; 2) Dinâmica inicial de 10 min; 3) Atividade prática em grupo; 4) Avaliação formativa.` },
+        { name: "Adaptação inclusiva de texto", text: t => `Adapte o conteúdo "${t}" para estudantes que precisam de instruções visuais e segmentadas (TDAH/TEA). Use frases curtas, tópicos numerados e exemplos concretos do dia a dia.` }
+      ],
+      estudante: [
+        { name: "Tutor socrático passo a passo", text: t => `Quero aprender sobre "${t}". Explique o conceito principal em 1 parágrafo simples usando uma analogia e me faça UMA pergunta para testar se eu entendi antes de continuar.` },
+        { name: "Quiz de revisão para prova", text: t => `Crie um quiz de 5 perguntas sobre "${t}" (do fácil ao difícil). Faça uma pergunta por vez, espere minha resposta e explique cada resultado.` }
+      ],
+      coordenador: [
+        { name: "Pauta de formação docente", text: t => `Crie uma pauta de reunião pedagógica de 1 hora para professores sobre "${t}" com apoio de Inteligência Artificial, incluindo oficina prática e combinados éticos.` },
+        { name: "Projeto interdisciplinar", text: t => `Proponha um projeto interdisciplinar escolar de 3 semanas sobre "${t}", detalhando o papel de Linguagens, Matemática, Ciências e Humanas.` }
+      ]
+    };
+
+    const genRole = document.getElementById('genRole');
+    const genGoal = document.getElementById('genGoal');
+    const genTopic = document.getElementById('genTopic');
+    const genOutput = document.getElementById('genOutput');
+
+    function loadGeneratorGoals() {
+      const list = promptTemplates[genRole.value];
+      genGoal.innerHTML = '';
+      list.forEach((item, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = item.name;
+        genGoal.appendChild(opt);
+      });
+      updatePromptOutput();
+    }
+
+    function updatePromptOutput() {
+      const list = promptTemplates[genRole.value];
+      const idx = genGoal.value || 0;
+      const topic = genTopic.value.trim() || "Sustentabilidade na Escola";
+      genOutput.textContent = list[idx].text(topic);
+    }
+
+    genRole.addEventListener('change', loadGeneratorGoals);
+    genGoal.addEventListener('change', updatePromptOutput);
+    genTopic.addEventListener('input', updatePromptOutput);
+
+    // Copiar para área de transferência usando fallback seguro
+    document.getElementById('copyPromptBtn').addEventListener('click', () => {
+      const textToCopy = genOutput.textContent;
+      const tempArea = document.createElement('textarea');
+      tempArea.value = textToCopy;
+      tempArea.style.position = 'fixed';
+      tempArea.style.left = '-9999px';
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand('copy');
+        const fb = document.getElementById('genFeedback');
+        fb.textContent = '✓ Comando copiado para a área de transferência!';
+        setTimeout(() => fb.textContent = '', 2500);
+      } catch (e) {}
+      document.body.removeChild(tempArea);
+    });
+
+    function getFavs() {
+      try {
+        return JSON.parse(localStorage.getItem('iaprender_favs') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function setFavs(arr) {
+      try {
+        localStorage.setItem('iaprender_favs', JSON.stringify(arr));
+      } catch (e) {}
+    }
+
+    function renderFavorites() {
+      const favs = getFavs();
+      const box = document.getElementById('favList');
+      if (favs.length === 0) {
+        box.innerHTML = 'Nenhum comando salvo ainda. Clique em "Salvar nos Favoritos" acima.';
+        return;
+      }
+      box.innerHTML = favs.map((f, idx) => `
+        <div style="background: var(--surface-2); border: 1px solid var(--border); padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; gap: 10px; align-items: center;">
+          <span style="color: var(--text); font-size: 0.85rem;">${f}</span>
+          <button onclick="removeFav(${idx})" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: 700;">✕</button>
+        </div>
+      `).join('');
+    }
+
+    window.removeFav = function(idx) {
+      const favs = getFavs();
+      favs.splice(idx, 1);
+      setFavs(favs);
+      renderFavorites();
+    };
+
+    document.getElementById('saveFavBtn').addEventListener('click', () => {
+      const favs = getFavs();
+      if (!favs.includes(genOutput.textContent)) {
+        favs.unshift(genOutput.textContent);
+        setFavs(favs.slice(0, 8));
+        renderFavorites();
+      }
+      const fb = document.getElementById('genFeedback');
+      fb.textContent = '⭐ Salvo nos seus favoritos!';
+      setTimeout(() => fb.textContent = '', 2500);
+    });
+
+    loadGeneratorGoals();
+    renderFavorites();
+
+    // Chat Simulador IAPRENDER
+    const chatMessages = document.getElementById('chatMessages');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+
+    function getBotReply(text) {
+      const q = text.toLowerCase();
+      if (q.includes('professor') || q.includes('aula')) {
+        return "👩‍🏫 <strong>Para Professores:</strong> Você pode usar a IA para criar planos de aula alinhados à BNCC, adaptar textos para estudantes com necessidades específicas (inclusão) e gerar rubricas de correção. Experimente a aba <em>Prompts</em> para gerar um modelo agora!";
+      }
+      if (q.includes('estudante') || q.includes('aluno') || q.includes('colar')) {
+        return "🎓 <strong>Para Estudantes:</strong> O segredo é pedir para a IA agir como <em>tutora</em>: peça explicações com analogias do dia a dia e diga 'não me dê a resposta pronta, me faça perguntas passo a passo'. Isso acelera o aprendizado de verdade!";
+      }
+      if (q.includes('coordena') || q.includes('gest')) {
+        return "📊 <strong>Para Coordenadores:</strong> A IA ajuda a estruturar pautas de formação docente, conectar disciplinas em projetos interdisciplinares e redigir comunicados acolhedores para as famílias.";
+      }
+      if (q.includes('etica') || q.includes('ética') || q.includes('lgpd') || q.includes('cuidado')) {
+        return "🛡️ <strong>Ética e Segurança:</strong> Nunca insira dados pessoais ou nomes de alunos em ferramentas públicas (LGPD), sempre confira as fontes das respostas e lembre-se: a IA apoia, mas não substitui o professor.";
+      }
+      return "✨ Ótima pergunta! Na <strong>IAPRENDER</strong>, recomendamos sempre definir o papel da IA (ex: 'Atue como professor de Ciências'), o ano escolar e o objetivo da atividade. Acesse a aba <strong>Prompts</strong> no menu para montar o seu!";
+    }
+
+    function appendMsg(html, sender) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + sender;
+      div.innerHTML = html;
+      chatMessages.appendChild(div);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    window.sendQuickMsg = function(text) {
+      appendMsg(text, 'user');
+      setTimeout(() => appendMsg(getBotReply(text), 'bot'), 350);
+    };
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = chatInput.value.trim();
+      if (!val) return;
+      appendMsg(val, 'user');
+      chatInput.value = '';
+      setTimeout(() => appendMsg(getBotReply(val), 'bot'), 350);
+    });
+  </script>
+</body>
+</html>
